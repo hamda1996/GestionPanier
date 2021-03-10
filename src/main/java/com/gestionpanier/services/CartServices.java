@@ -17,20 +17,44 @@ public class CartServices {
 	@Autowired
 	private CartItemRepository cartItemRepo;
 	
-	public List<CartItem> GetCartByUser(long user_id) {
+	public CartItem GetCartByUser(long user_id) {
 		return cartItemRepo.findByUserId(user_id);
 	}
 	
-	public String getLivres()
+	public String getLivres(long id)
 	{
-	    final String uri = "http://localhost:9091/livres/1";
+	    final String uri = "http://localhost:9091/livres/"+id;
 	    RestTemplate restTemplate = new RestTemplate();
 	    String result = restTemplate.getForObject(uri, String.class);
-	    System.out.println(result);
 	    return result;
 	}
-	
+	public int getStockLivre(long id)
+	{
+	    final String uri = "http://localhost:9091/livres/"+id+"/stock";
+	    RestTemplate restTemplate = new RestTemplate();
+	    int result = restTemplate.getForObject(uri, int.class);
+	    return result;
+	}
+	public int getPrixLivre(long id)
+	{
+	    final String uri = "http://localhost:9091/livres/"+id+"/prix";
+	    RestTemplate restTemplate = new RestTemplate();
+	    int result = restTemplate.getForObject(uri, int.class);
+	    return result;
+	}
 	public CartItem AddItem(CartItem item) {
+		if (getStockLivre(item.getProduct_id())>0 ) {
+			if (cartItemRepo.existsById(item.getId())) {
+				item.setPrixtotal(item.getPrixtotal()+getPrixLivre(item.getProduct_id()));
+				item.setQuantity(item.getQuantity()+1);			
+			}else {
+				item.setPrixtotal(getPrixLivre(item.getProduct_id()));
+				item.setQuantity(1);			
+
+			}
+			//int stockValue=getStockLivre(item.getProduct_id())-1;
+			
+		} 
 		return cartItemRepo.save(item);
 	}
 	

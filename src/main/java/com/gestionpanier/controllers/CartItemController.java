@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gestionlivres.entities.Books;
 import com.gestionpanier.entities.CartItem;
 import com.gestionpanier.services.CartServices;
 
@@ -20,9 +21,15 @@ public class CartItemController {
 	private CartServices cartServices;
 	
 	@GetMapping("/panier/users/{user_id}")
-	public List<CartItem> GetCartByUser(@PathVariable long user_id) {
+	public CartItem GetCartByUser(@PathVariable long user_id) {
 		return cartServices.GetCartByUser(user_id);
 	}
+	@GetMapping("/panier/users/{user_id}/quantite")
+	public int GetQuantiteByUser(@PathVariable long user_id) {
+		CartItem cartItem = cartServices.GetCartByUser(user_id);
+		return cartItem != null ? cartItem.getQuantity() : 0;
+		}
+	
 	
 	@PostMapping("/panier/add")
 	public CartItem AddItem(@RequestBody CartItem item) {
@@ -39,8 +46,8 @@ public class CartItemController {
 		return cartServices.deleteCartITem(id);
 	}
 	@GetMapping("/nombre")
-	public String getlivres() {
-		return cartServices.getLivres();
+	public String getlivres(long id) {
+		return cartServices.getLivres(id);
 		
 		
 	}
