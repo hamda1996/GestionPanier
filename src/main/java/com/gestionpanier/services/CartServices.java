@@ -29,7 +29,7 @@ public class CartServices {
 	}
 	
 	public CartItem AddItem(CartItem item) {
-		// String uriToCall = "http://localhost:9091/livre?bookId=1&stockToRemove=3";
+		/* String uriToCall = "http://localhost:9091/livre?bookId=1&stockToRemove=3";
 		String BASE_URL = "http://localhost:9091";
 		 RestTemplate restTemplate = new RestTemplate();
 		 System.out.print("passage 1");
@@ -40,9 +40,7 @@ public class CartServices {
 				    .build()                                                 // Build the URL
 				    .encode()                                                // Encode any URI items that need to be encoded
 				    .toUri(); 
-		 boolean result = restTemplate.getForObject(targetUrl, boolean.class);
-		 System.out.print(result);
-		 System.out.print("passage 2");
+		 boolean result = restTemplate.getForObject(targetUrl, boolean.class);*/
 		return cartItemRepo.save(item);
 	}
 	
