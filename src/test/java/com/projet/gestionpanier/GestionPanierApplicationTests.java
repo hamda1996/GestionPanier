@@ -1,4 +1,4 @@
-package com.projet.gestionpainier;
+package com.projet.gestionpanier;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
