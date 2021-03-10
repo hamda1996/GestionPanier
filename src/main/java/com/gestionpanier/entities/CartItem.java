@@ -1,5 +1,6 @@
 package com.gestionpanier.entities;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +15,8 @@ public class CartItem {
 	private int quantity;
 	private float prixtotal;
 	private long product_id;
-	private long user_id;
+	@Column(name = "user_id")
+	private long userId;
 	
 	public long getId() {
 		return id;
@@ -41,10 +43,10 @@ public class CartItem {
 		this.product_id = product_id;
 	}
 	public long getUser_id() {
-		return user_id;
+		return userId;
 	}
 	public void setUser_id(long user_id) {
-		this.user_id = user_id;
+		this.userId = user_id;
 	}
 	public CartItem(long id, int quantity, float prixtotal, long product_id, long user_id) {
 		super();
@@ -52,7 +54,7 @@ public class CartItem {
 		this.quantity = quantity;
 		this.prixtotal = prixtotal;
 		this.product_id = product_id;
-		this.user_id = user_id;
+		this.userId = user_id;
 	}
 	public CartItem() {
 		super();
@@ -61,7 +63,7 @@ public class CartItem {
 	@Override
 	public String toString() {
 		return "CartItem [id=" + id + ", quantity=" + quantity + ", prixtotal=" + prixtotal + ", product_id="
-				+ product_id + ", user_id=" + user_id + "]";
+				+ product_id + ", user_id=" + userId + "]";
 	}
 	
 	

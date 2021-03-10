@@ -19,26 +19,30 @@ public class CartItemController {
 	@Autowired
 	private CartServices cartServices;
 	
-	@GetMapping("/cart/{user_id}")
-	public List<CartItem>GetCartByUser(@PathVariable long user_id) {
+	@GetMapping("/panier/users/{user_id}")
+	public List<CartItem> GetCartByUser(@PathVariable long user_id) {
 		return cartServices.GetCartByUser(user_id);
 	}
 	
-	@PostMapping("/cart")
+	@PostMapping("/panier/add")
 	public CartItem AddItem(@RequestBody CartItem item) {
 		return cartServices.AddItem(item);
 	}
 	
-	@PutMapping("/cart")
+	@PutMapping("/panier")
 	public CartItem UpdateItem(@RequestBody CartItem item) {
 		return cartServices.UpdateItem(item);
 	}
 	
-	@DeleteMapping("/cart/{id}")
+	@DeleteMapping("/panier/delete/{id}")
 	public String deleteCartITem(@PathVariable long id) {
 		return cartServices.deleteCartITem(id);
 	}
-	
-	
+	@GetMapping("/nombre")
+	public String getlivres() {
+		return cartServices.getLivres();
+		
+		
+	}
 }
 
