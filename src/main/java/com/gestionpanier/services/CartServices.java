@@ -1,12 +1,16 @@
 package com.gestionpanier.services;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.gestionlivres.entities.Books;
 import com.gestionpanier.dao.CartItemRepository;
 import com.gestionpanier.entities.CartItem;
 
@@ -17,8 +21,12 @@ public class CartServices {
 	@Autowired
 	private CartItemRepository cartItemRepo;
 	
-	public CartItem GetCartByUser(long user_id) {
+	public List<CartItem> getCartByUser(long user_id) {
 		return cartItemRepo.findByUserId(user_id);
+	}
+	
+	public CartItem getQuantityByUser(long user_id) {
+		return cartItemRepo.findQuantityByUserId(user_id);
 	}
 	
 	public String getLivres(long id)
@@ -42,20 +50,29 @@ public class CartServices {
 	    int result = restTemplate.getForObject(uri, int.class);
 	    return result;
 	}
-	public CartItem AddItem(CartItem item) {
-		if (getStockLivre(item.getProduct_id())>0 ) {
-			if (cartItemRepo.existsById(item.getId())) {
-				item.setPrixtotal(item.getPrixtotal()+getPrixLivre(item.getProduct_id()));
-				item.setQuantity(item.getQuantity()+1);			
-			}else {
-				item.setPrixtotal(getPrixLivre(item.getProduct_id()));
-				item.setQuantity(1);			
-
-			}
-			//int stockValue=getStockLivre(item.getProduct_id())-1;
-			
-		} 
-		return cartItemRepo.save(item);
+	public List<CartItem> AddItem(@NonNull final CartItem basketItem) {
+		boolean isAlReadyExists = cartItemRepo.
+				findByUserIdAndProductId(basketItem.getUser_id(), basketItem.getProduct_id()) != null;
+		List<CartItem> basket = new ArrayList<CartItem>();
+		basket.addAll(cartItemRepo.findByUserId(basketItem.getUser_id()));
+		if(!basket.isEmpty()) {
+			basket.stream().forEach(it -> 
+				{if(it.getProduct_id() == basketItem.getProduct_id()) {
+					it.setQuantity(it.getQuantity() + basketItem.getQuantity());
+					it.setPrixtotal(it.getQuantity() * getPrixLivre(it.getProduct_id()));
+					cartItemRepo.save(it);
+				} /*
+					 * else { it.setPrixtotal(it.getQuantity() * getPrixLivre(it.getProduct_id()));
+					 * cartItemRepo.save(it); }
+					 */
+				});
+		}
+		if(!isAlReadyExists) {
+			basket.add(basketItem);
+			basketItem.setPrixtotal(basketItem.getQuantity() * getPrixLivre(basketItem.getProduct_id()));
+			cartItemRepo.save(basketItem);
+		}
+		return basket;
 	}
 	
 	public String deleteCartITem(long id) {

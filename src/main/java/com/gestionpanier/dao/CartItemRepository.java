@@ -14,5 +14,11 @@ public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 	public boolean existsById(long id);
 	
 	@Query("SELECT * FROM cart_item WHERE cart_item.user_id=user_id")
-	public  CartItem findByUserId(long user_id);
+	public  List<CartItem> findByUserId(long user_id);
+	
+	@Query("SELECT * FROM cart_item WHERE cart_item.user_id=user_id and cart_item.product_id=product_id")
+	public  CartItem findByUserIdAndProductId(long user_id,long product_id);
+	
+	@Query("SELECT * FROM cart_item WHERE cart_item.user_id=user_id")
+	public  CartItem findQuantityByUserId(long user_id);
 }

@@ -14,7 +14,8 @@ public class CartItem {
 	private long id;
 	private int quantity;
 	private float prixtotal;
-	private long product_id;
+	@Column(name = "product_id")
+	private long productId;
 	@Column(name = "user_id")
 	private long userId;
 	
@@ -37,10 +38,10 @@ public class CartItem {
 		this.prixtotal = prixtotal;
 	}
 	public long getProduct_id() {
-		return product_id;
+		return productId;
 	}
 	public void setProduct_id(long product_id) {
-		this.product_id = product_id;
+		this.productId = product_id;
 	}
 	public long getUser_id() {
 		return userId;
@@ -53,7 +54,7 @@ public class CartItem {
 		this.id = id;
 		this.quantity = quantity;
 		this.prixtotal = prixtotal;
-		this.product_id = product_id;
+		this.productId = product_id;
 		this.userId = user_id;
 	}
 	public CartItem() {
@@ -63,10 +64,8 @@ public class CartItem {
 	@Override
 	public String toString() {
 		return "CartItem [id=" + id + ", quantity=" + quantity + ", prixtotal=" + prixtotal + ", product_id="
-				+ product_id + ", user_id=" + userId + "]";
+				+ productId + ", user_id=" + userId + "]";
 	}
-	
-	
 	
 
 }
