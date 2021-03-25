@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.gestionlivres.entities.Books;
+import com.gestionlivres.entities.StockDto;
 import com.gestionpanier.dao.CartItemRepository;
 import com.gestionpanier.entities.CartItem;
 
@@ -47,9 +48,16 @@ public class CartServices {
 	{
 	    final String uri = "http://localhost:9091/livres/"+id+"/prix";
 	    RestTemplate restTemplate = new RestTemplate();
-	    int result = restTemplate.getForObject(uri, int.class);
+	    int result = restTemplate.getForObject(uri, int.class); 
 	    return result;
 	}
+	
+	private void manageLivreStock(StockDto stockDto) {
+		final String uri = "http://localhost:9091/stock/livre";
+	    RestTemplate restTemplate = new RestTemplate();
+	    Object result = restTemplate.postForObject(uri, stockDto, Object.class); 
+	}
+	
 	public List<CartItem> AddItem(@NonNull final CartItem basketItem) {
 		boolean isAlReadyExists = cartItemRepo.
 				findByUserIdAndProductId(basketItem.getUser_id(), basketItem.getProduct_id()) != null;
@@ -61,10 +69,7 @@ public class CartServices {
 					it.setQuantity(it.getQuantity() + basketItem.getQuantity());
 					it.setPrixtotal(it.getQuantity() * getPrixLivre(it.getProduct_id()));
 					cartItemRepo.save(it);
-				} /*
-					 * else { it.setPrixtotal(it.getQuantity() * getPrixLivre(it.getProduct_id()));
-					 * cartItemRepo.save(it); }
-					 */
+				} 
 				});
 		}
 		if(!isAlReadyExists) {
@@ -72,6 +77,11 @@ public class CartServices {
 			basketItem.setPrixtotal(basketItem.getQuantity() * getPrixLivre(basketItem.getProduct_id()));
 			cartItemRepo.save(basketItem);
 		}
+		StockDto dto = new StockDto();
+		dto.setProductId(basketItem.getProduct_id());
+		dto.setQuantityToReduce(basketItem.getQuantity());
+		manageLivreStock(dto);
+		
 		return basket;
 	}
 	
